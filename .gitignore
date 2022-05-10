@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# Cmake Stuff
+cmake*
+
 # Compiled Object files
 *.slo
 *.lo
