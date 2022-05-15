@@ -7,6 +7,12 @@
 
 #define PLAYS 10
 #define DIGITS 4
+#ifdef UNIX
+    #define CLEAR std::system("clear")
+#endif
+#ifdef WIN32
+    #define CLEAR std::system("cls")
+#endif
 
 template <typename T, size_t S>
 class round{
@@ -117,11 +123,13 @@ bool round<T, S>::operator==(const round &rhs) const {
 
 
 int main(){
+    std::cout << "Type your key: ";
     round<int, DIGITS> key;
+    CLEAR;
     std::vector<round<int, DIGITS>> board;
     for (int i = 0; i < PLAYS; ++i) {
         std::cout << "Input your sequence:" << std::endl; //Added a linebreak so hints and numbers would line up nicely
-        board.push_back(round<int, DIGITS>(&key));
+        board.emplace_back(&key);
         board[i].printHint();
         if (board.back() == key){
             std::cout << std::endl << "You Win!" << std::endl;
