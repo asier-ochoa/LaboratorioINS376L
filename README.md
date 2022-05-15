@@ -13,3 +13,11 @@ Comando ejemplo para construir un proyecto CodeBlocks Unix usando el compilador 
 ```
 cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/bin/make -DCMAKE_C_COMPILER=/bin/gcc -DCMAKE_CXX_COMPILER=/bin/g++ -G "CodeBlocks - Unix Makefiles" -S "Proyectos LabINS378L" -B "Proyectos LabINS378L/cmake-build-debug"
 ```
+
+---
+Cada archivo `.cpp` debe tener esta cabezera:
+```c++
+//ENUNCIADO: 
+//PARTICIPANTES: ID NOMBRE APELLIDO
+//FECHA:
+```
