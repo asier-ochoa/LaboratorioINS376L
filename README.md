@@ -1,7 +1,7 @@
 # Repo de Laboratorio 
 ### Miembros del grupo:
 * Asier Ochoa | 1101331
-* Yeuris Terrero |
+* Yeuris Terrero | 1099399
 * Carlos Garcia |
 * Miguel Payton |
 ___
