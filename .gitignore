@@ -3,6 +3,10 @@
 
 # Cmake Stuff
 cmake*
+CMakeFiles/
+CMakeCache.txt
+Makefile
+Testing
 
 # Compiled Object files
 *.slo
