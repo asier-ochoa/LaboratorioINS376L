@@ -2,8 +2,8 @@
 ### Miembros del grupo:
 * Asier Ochoa | 1101331
 * Yeuris Terrero | 1099399
-* Carlos Garcia |
-* Miguel Payton |
+* Carlos Garcia | 1101629
+* Miguel Angel |
 ___
 El repositorio contiene todos los proyectos de laboratorio. Cada proyecto tiene su propia carpeta con su
 propio `CMakeLists.txt` ademas de uno global. Para configurar el proyecto en su maquina, debe correr cmake

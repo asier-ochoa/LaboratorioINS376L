@@ -1,5 +1,5 @@
 //ENUNCIADO: Hacer juego de mastermind
-//PARTICIPANTES: 1101331 Asier Ochoa, 1099399 Yeuris Terrero
+//PARTICIPANTES: 1101331 Asier Ochoa, 1099399 Yeuris Terrero, Carlos Garcia 1101629
 //FECHA: 4/15/22
 #include <iostream>
 #include <vector>

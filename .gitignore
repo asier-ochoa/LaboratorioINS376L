@@ -9,6 +9,7 @@ CMakeFiles/
 CMakeCache.txt
 Makefile
 Testing
+build
 
 # Compiled Object files
 *.slo
