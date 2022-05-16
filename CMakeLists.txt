@@ -7,7 +7,7 @@ if(UNIX)
     add_compile_definitions(UNIX)
 endif()
 if(WIN32)
-    add_compile_definitions(WIN)
+    add_compile_definitions(WIN32)
 endif()
 
 

@@ -3,7 +3,7 @@
 * Asier Ochoa | 1101331
 * Yeuris Terrero | 1099399
 * Carlos Garcia | 1101629
-* Miguel Angel |
+* Miguel Angel | 1100685
 ___
 El repositorio contiene todos los proyectos de laboratorio. Cada proyecto tiene su propia carpeta con su
 propio `CMakeLists.txt` ademas de uno global. Para configurar el proyecto en su maquina, debe correr cmake
