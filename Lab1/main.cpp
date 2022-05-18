@@ -154,5 +154,7 @@ int main(){
         delete[] board.back().hint;
         board.pop_back();
     }
+    delete[] key.hint;
+    delete[] key.raw;
     return 0;
 }
