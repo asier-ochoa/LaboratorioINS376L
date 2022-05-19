@@ -24,8 +24,12 @@ class guest{ // DON'T USE VECTORS, BOY
 
         void makeList();
 
+        bool operator>(const guest& rhs){return this->elements > rhs.elements;}
         friend std::ostream &operator<<(std::ostream &os, const guest &guest);
 };
+
+template <size_t S>
+unsigned int findLongest(guest* list);
 
 void guest::expand() {
     auto* tmp = new unsigned int[size * 2];
@@ -54,12 +58,24 @@ std::ostream &operator<<(std::ostream &os, const guest &guest) {
     return os;
 }
 
-int main(){
+template <size_t S>
+unsigned int findLongest(guest* list) {
+    unsigned int longest = 0;
+    for (int i = 1; i < S; ++i) {
+        longest = (list[i] > list[longest] ? i : longest);
+    }
+    return longest;
+}
+
+int main(const int argc, const char** argv){
     srand(time(nullptr)); //Seed with unix time
     guest party[99]; //calls constructor on every member (BRUH)
     for (int i = 0; i < 99; ++i) {
         party[i].makeList();
-        std::cout << i << ": " << party[i] << std::endl;
+        if (argc > 1)
+            std::cout << i << ": " << party[i] << '\n';
     }
+    unsigned int longest = findLongest<99>(party);
+    std::cout << "\nLongest chain is " << longest << ": " << party[longest] << std::endl;
     return 0;
 }
