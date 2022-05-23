@@ -1,5 +1,5 @@
 //ENUNCIADO: Cadena mas larga
-//PARTICIPANTES: 1101331 Asier Ochoa
+//PARTICIPANTES: 1101331 Asier Ochoa, 1099399 Yeuris Terrero
 //FECHA:
 
 #include <iostream>
