@@ -3,7 +3,6 @@
 //FECHA:
 
 #include <iostream>
-#include <algorithm>
 
 int main(){
 
@@ -45,7 +44,6 @@ int main(){
 
     std::cout << "Longest chain: " << chain[0] << "\n" << "Number: " << num_result; //prints longest chaing and number that produces it
     
-
 
     return 0;
 }
