@@ -21,6 +21,7 @@ class Queue {
         T dequeue();
         T peek();
         bool isEmpty();
+        size_t count();
 };
 
 template<typename T>
@@ -61,15 +62,30 @@ bool Queue<T>::isEmpty() {
     return first == nullptr;
 }
 
+template<typename T>
+size_t Queue<T>::count() {
+    if (!isEmpty()) {
+        Node* iter = first;
+        size_t count = 1;
+        while (iter->next != nullptr) {
+            iter = iter->next;
+            count++;
+        }
+        return count;
+    }
+    return 0;
+}
+
 int main() {
     Queue<int> q;
     q.enqueue(3);
     q.enqueue(62);
     q.enqueue(903);
     q.enqueue(2);
-    std::cout << q.peek() << "\n";
+    std::cout << "count: " << q.count() << "\n";
     std::cout << q.dequeue() << "\n";
     std::cout << q.dequeue() << "\n";
+    std::cout << "count: " << q.count() << "\n";
     std::cout << q.dequeue() << "\n";
     std::cout << q.dequeue() << "\n";
     std::cout << "might segfault\n";
@@ -81,6 +97,8 @@ int main() {
     std::cout << q2.dequeue() << "\n";
     std::cout << q2.dequeue() << "\n";
     std::cout << "might segfault\n";
+    std::cout << q2.dequeue() << "\n";
+    q2.enqueue("IT WORKED");
     std::cout << q2.dequeue() << "\n";
     return 0;
 }
