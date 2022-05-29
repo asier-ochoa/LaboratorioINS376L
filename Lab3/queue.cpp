@@ -4,6 +4,20 @@
 
 #include <iostream>
 #include <utility>
+#include "raylib.h"
+#include "raymath.h"
+#include "imgui.h"
+#include "rlImGui.h"
+
+struct DrawingParams {
+    int spacing;
+    int verticalSpacing;
+    int nodeWidth;
+    int nodeHeight;
+    Vector2 start;
+    Color firstCol;
+    Color lastCol;
+};
 
 template<typename T>
 //REMEMBER!!! first-> node-> last-> NULL
@@ -26,6 +40,7 @@ class Queue {
         T& peek();
         bool isEmpty();
         size_t count();
+        void draw(DrawingParams& params);
 };
 
 template<typename T>
@@ -113,33 +128,75 @@ size_t Queue<T>::count() {
     return 0;
 }
 
+template<typename T>
+void Queue<T>::draw(DrawingParams& params) {
+    Node* ptr = first;
+    int count = 0;
+    int xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
+    DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, params.firstCol);
+    DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2, params.start.y + params.nodeHeight, params.firstCol);
+    DrawText(std::to_string(ptr->priority).c_str(), xpos, params.start.y, params.nodeWidth - 20, BLUE);
+    if (ptr->next != nullptr)
+        ptr = ptr->next;
+    while (ptr->next != nullptr){
+        int xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
+        DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, WHITE);
+        DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2, params.start.y + params.nodeHeight, WHITE);
+        DrawText(std::to_string(ptr->priority).c_str(), xpos, params.start.y, params.nodeWidth - 20, BLUE);
+        ptr = ptr->next;
+        count++;
+    }
+}
+
 int main() {
-    Queue<int> q;
-    q.enqueue(3,9);
-    q.enqueue(62);
-    q.enqueue(903);
-    q.enqueue(2);
-    q.enqueue(12345, 10);
-    q.enqueue(54321, 10);
-    std::cout << "peek: " << q.peek() << "\n";
-    std::cout << "count: " << q.count() << "\n";
-    std::cout << q.dequeue() << "\n";
-    std::cout << q.dequeue() << "\n";
-    std::cout << "count: " << q.count() << "\n";
-    std::cout << q.dequeue() << "\n";
-    std::cout << q.dequeue() << "\n";
-    std::cout << q.dequeue() << "\n";
-    q.enqueue(333, 2);
-    std::cout << q.dequeue() << "\n";
-    Queue<std::string> q2;
-    q2.enqueue("XDD");
-    q2.enqueue("LMAOO");
-    std::cout << "------str-------\n";
-    std::cout << q2.dequeue() << "\n";
-    std::cout << q2.dequeue() << "\n";
-    std::cout << "might segfault\n";
-    std::cout << q2.dequeue() << "\n";
-    q2.enqueue("IT WORKED");
-    std::cout << q2.dequeue() << "\n";
-    return 0;
+    InitWindow(800, 600, "Cola con prioridad");
+    rlImGuiSetup(true);
+    SetTargetFPS(60);
+    Camera2D camera;
+    camera.target = {0,0};
+    camera.zoom = 1;
+    camera.offset = {0,0};
+    camera.rotation = 0;
+    Queue<int> q[100];
+    DrawingParams params{};
+    params.firstCol = GREEN;
+    params.lastCol = RED;
+    params.spacing = 50;
+    params.verticalSpacing = 20;
+    params.nodeHeight = 50;
+    params.nodeWidth = 100;
+    params.start = {200, 200};
+    while (!WindowShouldClose()){
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
+            camera.offset = Vector2Add(camera.offset, GetMouseDelta());
+        }
+        BeginDrawing();
+        ClearBackground(BLACK);
+        BeginMode2D(camera);
+        for (int i = 0; i < 100; ++i) {
+            if (!q[i].isEmpty()){
+                q[i].draw(params);
+                params.start.y += params.nodeHeight + params.verticalSpacing;
+            }
+        }
+        params.start.y = 0;
+        EndMode2D();
+        rlImGuiBegin();
+        if (ImGui::Begin("Control")) {
+            static int chosenIndex;
+            ImGui::PushItemWidth(80);
+            ImGui::InputInt("Chosen queue", &chosenIndex);
+            ImGui::PopItemWidth();
+            ImGui::Separator();
+            if (ImGui::Button("Enqueue Item")){
+                q[chosenIndex].enqueue(3);
+            }
+            if (ImGui::Button("Break")){
+                std::cout << "XD";
+            }
+            ImGui::End();
+        }
+        rlImGuiEnd();
+        EndDrawing();
+    }
 }
