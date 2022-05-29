@@ -128,6 +128,8 @@ size_t Queue<T>::count() {
     return 0;
 }
 
+//DRAWING STUFF BEGINS HERE
+
 template<typename T>
 void Queue<T>::draw(DrawingParams& params) {
     Node* ptr = first;
