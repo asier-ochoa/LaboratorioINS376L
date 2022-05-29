@@ -1,6 +1,6 @@
 //ENUNCIADO: Hacer cola con prioridad (16 prioridades)
-//PARTICIPANTES: ID NOMBRE APELLIDO
-//FECHA:
+//PARTICIPANTES: 1101331 Asier Ochoa ; Yeuris Terrero | 1099399 ; Carlos Garcia | 1101629 ; Miguel Angel | 1100685
+//FECHA:27/05/22
 
 #include <iostream>
 #include <utility>
