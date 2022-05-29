@@ -131,20 +131,26 @@ size_t Queue<T>::count() {
 template<typename T>
 void Queue<T>::draw(DrawingParams& params) {
     Node* ptr = first;
-    int count = 0;
-    int xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
-    DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, params.firstCol);
-    DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2, params.start.y + params.nodeHeight, params.firstCol);
-    DrawText(std::to_string(ptr->priority).c_str(), xpos, params.start.y, params.nodeWidth - 20, BLUE);
-    if (ptr->next != nullptr)
-        ptr = ptr->next;
-    while (ptr->next != nullptr){
+    if (first == last){
+        int count = 0;
         int xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
-        DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, WHITE);
-        DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2, params.start.y + params.nodeHeight, WHITE);
-        DrawText(std::to_string(ptr->priority).c_str(), xpos, params.start.y, params.nodeWidth - 20, BLUE);
+        DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, params.firstCol);
+        DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2, params.start.y + params.nodeHeight, params.firstCol);
+        DrawText(std::to_string(ptr->priority).c_str(), xpos + 10, params.start.y + 10, 25, BLUE);
+        DrawText(std::to_string(ptr->value).c_str(), xpos + 10 + params.nodeWidth / 2, params.start.y + 10, 25, params.firstCol);
         ptr = ptr->next;
-        count++;
+    } else {
+        int count = 0;
+        while (ptr->next != nullptr) {
+            int xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
+            DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, WHITE);
+            DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2,
+                     params.start.y + params.nodeHeight, WHITE);
+            DrawText(std::to_string(ptr->priority).c_str(), xpos + 10, params.start.y + 10, 25, BLUE);
+            DrawText(std::to_string(ptr->value).c_str(), xpos + 10 + params.nodeWidth / 2, params.start.y + 10, 25, WHITE);
+            ptr = ptr->next;
+            count++;
+        }
     }
 }
 
@@ -184,16 +190,18 @@ int main() {
         rlImGuiBegin();
         if (ImGui::Begin("Control")) {
             static int chosenIndex;
+            static int value;
+            static int priority;
             ImGui::PushItemWidth(80);
             ImGui::InputInt("Chosen queue", &chosenIndex);
-            ImGui::PopItemWidth();
             ImGui::Separator();
-            if (ImGui::Button("Enqueue Item")){
-                q[chosenIndex].enqueue(3);
-            }
-            if (ImGui::Button("Break")){
+            ImGui::InputInt("##", &value); ImGui::SameLine();
+            ImGui::SliderInt("Priority", &priority, 0, 15);
+            ImGui::PopItemWidth();
+            if (ImGui::Button("Enqueue Item"))
+                q[chosenIndex].enqueue(value, priority);
+            if (ImGui::Button("Break"))
                 std::cout << "XD";
-            }
             ImGui::End();
         }
         rlImGuiEnd();
