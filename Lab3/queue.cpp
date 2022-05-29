@@ -141,9 +141,15 @@ void Queue<T>::draw(DrawingParams& params) {
         DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2, params.start.y + params.nodeHeight, params.firstCol);
         DrawText(std::to_string(ptr->priority).c_str(), xpos + 10, params.start.y + 10, 25, BLUE);
         DrawText(std::to_string(ptr->value).c_str(), xpos + 10 + params.nodeWidth / 2, params.start.y + 10, 25, params.firstCol);
-        ptr = ptr->next;
     } else {
         int count = 0;
+        int xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
+        DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, params.firstCol);
+        DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2, params.start.y + params.nodeHeight, params.firstCol);
+        DrawText(std::to_string(ptr->priority).c_str(), xpos + 10, params.start.y + 10, 25, BLUE);
+        DrawText(std::to_string(ptr->value).c_str(), xpos + 10 + params.nodeWidth / 2, params.start.y + 10, 25, params.firstCol);
+        count++;
+        ptr = ptr->next;
         while (ptr->next != nullptr) {
             int xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
             DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, WHITE);
@@ -154,10 +160,17 @@ void Queue<T>::draw(DrawingParams& params) {
             ptr = ptr->next;
             count++;
         }
+        xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
+        DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, params.lastCol);
+        DrawLine(xpos + params.nodeWidth / 2, params.start.y, xpos + params.nodeWidth / 2,
+                 params.start.y + params.nodeHeight, params.lastCol);
+        DrawText(std::to_string(ptr->priority).c_str(), xpos + 10, params.start.y + 10, 25, BLUE);
+        DrawText(std::to_string(ptr->value).c_str(), xpos + 10 + params.nodeWidth / 2, params.start.y + 10, 25, params.lastCol);
     }
 }
 
 int main() {
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(800, 600, "Cola con prioridad");
     rlImGuiSetup(true);
     SetTargetFPS(60);
@@ -170,7 +183,7 @@ int main() {
     DrawingParams params{};
     params.firstCol = GREEN;
     params.lastCol = RED;
-    params.spacing = 50;
+    params.spacing = 30;
     params.verticalSpacing = 20;
     params.nodeHeight = 50;
     params.nodeWidth = 100;
