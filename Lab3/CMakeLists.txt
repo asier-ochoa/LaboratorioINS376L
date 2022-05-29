@@ -1,3 +1,6 @@
 add_executable(queue queue.cpp)
 add_executable(stack stack.cpp)
 add_executable(amortizacion amortizacion.cpp)
+target_link_directories(queue PRIVATE ../libs)
+target_include_directories(queue PRIVATE ../include)
+target_link_libraries(queue raylib rlImGui imgui)
