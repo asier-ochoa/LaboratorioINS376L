@@ -76,9 +76,10 @@ void Queue<T>::enqueue(const T &val, const unsigned char priority) {
             break;
         ptr = ptr->next;
     }
-    if (ptr->next == nullptr)
+    if (ptr->next == nullptr) {
         ptr->next = new Node(val, priority);
-    else {
+        last = ptr->next;
+    } else {
         Node* tmp = ptr->next;
         ptr->next = new Node(val, priority);
         ptr->next->next = tmp;
@@ -133,7 +134,7 @@ size_t Queue<T>::count() {
 template<typename T>
 void Queue<T>::draw(DrawingParams& params) {
     Node* ptr = first;
-    if (first == last){
+    if (first == last){ //Means theres only 1 node
         int count = 0;
         int xpos = params.start.x + (params.nodeWidth + params.spacing) * count;
         DrawRectangleLines(xpos, params.start.y, params.nodeWidth, params.nodeHeight, params.firstCol);
@@ -178,6 +179,7 @@ int main() {
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
             camera.offset = Vector2Add(camera.offset, GetMouseDelta());
         }
+        camera.zoom += GetMouseWheelMove() * 0.1;
         BeginDrawing();
         ClearBackground(BLACK);
         BeginMode2D(camera);
@@ -202,6 +204,9 @@ int main() {
             ImGui::PopItemWidth();
             if (ImGui::Button("Enqueue Item"))
                 q[chosenIndex].enqueue(value, priority);
+            if (ImGui::Button("Deque Item")){
+                q[chosenIndex].dequeue();
+            }
             if (ImGui::Button("Break"))
                 std::cout << "XD";
             ImGui::End();

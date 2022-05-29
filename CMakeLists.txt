@@ -21,6 +21,9 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
     endif()
 endif()
 
+add_subdirectory(libs/imgui)
+add_subdirectory(libs/rlImGui)
+
 if(UNIX)
     add_compile_definitions(UNIX)
 endif()
@@ -32,3 +35,4 @@ endif()
 add_subdirectory(Lab1)
 add_subdirectory(Lab2)
 add_subdirectory(Lab3)
+
