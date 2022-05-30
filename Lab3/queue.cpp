@@ -186,7 +186,7 @@ int main() {
     params.spacing = 30;
     params.verticalSpacing = 20;
     params.nodeHeight = 50;
-    params.nodeWidth = 100;
+    params.nodeWidth = 120;
     params.start = {200, 200};
     while (!WindowShouldClose()){
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
