@@ -4,28 +4,47 @@
 
 #include <iostream>
 
-struct Node
+struct Node //creates a node struct
 {
     int data;
     Node *next;
 };
 
-void pushNode(Node *&stack, int num)
+void pushNode(Node *&stack, int num) //pushes a node to the pile
 {
-    Node *new_Node = new Node;
-    new_Node -> data = num;
+    Node *new_Node = new Node; //creates space in the memory for a new node
+    new_Node -> data = num; //moves data and pointer to the new node
     new_Node -> next = stack;
-    stack = new_Node;
+    stack = new_Node;// makes the stack point to the new node
 }
 
-void popNode(Node *&stack, int num)
+void popNode(Node *&stack, int &num) //pops top node
 {
-    Node *temp = stack;
-    num = temp -> data;
+    Node *temp = stack; //creates a temporay node that points where the stack is pointing
+    num = temp -> data; //moves data to temporary node
+    stack = temp -> next; //makes the stack point to the next node
+    delete temp; //deletes the data of the previous node
 }
 
 int main()
 {
-    Node* stack = nullptr;
-    pushNode(stack, 1);
+    Node* stack = nullptr; //creates the stack, wich is a code that points to null
+
+    int num = 0;
+
+    for (size_t i = 0; i < 5; i++) //adds numbers to the pile to show it works
+    {
+        num = i;
+        pushNode(stack, num);
+        std::cout<< i << " added to the pile\n";
+    }
+
+    std::cout<< "\nFirst in Last out:\n" << "\n";
+
+    while (stack != nullptr) //removes elements from the pile FILO
+    {
+        popNode(stack, num);
+        std::cout<< num << " removed from the pile\n";
+    }
+    
 }
