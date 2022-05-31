@@ -30,9 +30,44 @@ int main()
 {
     Node* stack = nullptr; //creates the stack, wich is a code that points to null
 
-    int num = 0;
+    int num = 0, choice;
 
-    for (size_t i = 0; i < 5; i++) //adds numbers to the pile to show it works
+    //menu for interactive stack
+    MENU:std::cout<<"What would you like to do?\n";
+    std::cout<<"1. Push the list\n";
+    std::cout<<"2. Pop the list\n";
+    std::cout<<"3. Exit\n";
+    std::cin>>choice;
+
+    switch (choice)
+    {
+    case 1: //pushes input number to the stack
+        std::cout<<"Number to push: \n";
+        std::cin>>num;
+        pushNode(stack, num);
+        std::cout<< num << " added to the pile\n";
+        goto MENU; //repeats the program for another input, unsafe but works xd
+        break;
+    case 2: //pops the list
+        if (stack == nullptr)
+        {
+            std::cout<<"stack is empty\n";
+        } else {
+            popNode(stack, num);
+            std::cout<< num << " removed from the pile\n";
+        }
+        goto MENU;
+        break;
+    case 3: //ends program
+        return 0;
+        break;
+    default: //type check
+        std::cout<<"Wrong choice\n";
+        goto MENU;
+        break;
+    }
+
+    /*for (size_t i = 0; i < 5; i++) //adds numbers to the pile to show it works
     {
         num = i;
         pushNode(stack, num);
@@ -45,6 +80,6 @@ int main()
     {
         popNode(stack, num);
         std::cout<< num << " removed from the pile\n";
-    }
+    }*/
     
 }
