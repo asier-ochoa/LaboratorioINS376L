@@ -49,11 +49,12 @@ int main()
         goto MENU; //repeats the program for another input, unsafe but works xd
         break;
     case 2: //pops the list
-        popNode(stack, num);
-        std::cout<< num << " removed from the pile\n";
         if (stack == nullptr)
         {
             std::cout<<"stack is empty\n";
+        } else {
+            popNode(stack, num);
+            std::cout<< num << " removed from the pile\n";
         }
         goto MENU;
         break;
