@@ -95,7 +95,7 @@ int main(){
             if (months < 1) months = 1;
             ImGui::InputFloat("Monto",&amount, 0, 0, "%.2f $"); ImGui::SameLine();
             if (amount < 1) amount = 1;
-            ImGui::SliderFloat("Tasa Anual", &tasaAnual, 0, 100, "%.0f %%");
+            ImGui::SliderFloat("Tasa Anual", &tasaAnual, 0, 100, "%.2f %%");
             tasaMensual = (tasaAnual/100)/12;
             ImGui::PopItemWidth();
             static float xd;
