@@ -27,7 +27,6 @@ class LinkedList {
         T Dequeue(); //Remove from front
 
         //Functions for getting references to the values in the nodes
-        const T& End();
         const T& operator[](T value); //Use this to access an element instead of peek
 };
 
@@ -97,7 +96,19 @@ T LinkedList<T>::Remove(T value) {
 
 template<typename T>
 T LinkedList<T>::Dequeue() {
-    return nullptr;
+    if (IsEmpty())
+        throw value_not_found();
+    Node* tmp = first->next;
+    T ret = first->value;
+    if (first == last){
+        delete first;
+        first = nullptr;
+        last = nullptr;
+        return ret;
+    }
+    delete first;
+    first = tmp;
+    return ret;
 }
 
 template<typename T>
@@ -118,5 +129,8 @@ int main(){
     l.Insert(4);
     l.Insert(4);
     l.Insert(2);
+    l.Dequeue();
+    l.Dequeue();
+    l.Dequeue();
     return 0;
 }
