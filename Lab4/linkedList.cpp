@@ -194,6 +194,9 @@ int main(){
             static int chosenIndex;
             static int value;
             static char buf[256];
+            ImGui::PushTextWrapPos(ImGui::GetWindowWidth());
+            ImGui::Text("Programa de lista simplemente enlazada con ordenamiento al insertar. La implementacion es generica asi que el uso de otros tipos de datos solo dependen si pueden usar los operadores \"<=\" y \"==\"", nullptr);
+            ImGui::PopTextWrapPos();
             if (ImGui::BeginTabBar("xd")) {
                 if (ImGui::BeginTabItem("Int")) {
                     tab = 0;
@@ -235,8 +238,8 @@ int main(){
                 }
                 ImGui::EndTabBar();
             }
-            ImGui::End();
         }
+        ImGui::End();
         rlImGuiEnd();
         EndDrawing();
     }
