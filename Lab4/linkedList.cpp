@@ -194,39 +194,53 @@ int main(int argc, const char *argv[])
         case 1:
             agregarNodo();
             cout << endl;
-            system("pause");
+#ifdef WIN32
+                system("pause");
+#endif
             break;
 
         case 2:
             eliminarNodo();
             cout << endl;
-            system("pause");
+#ifdef WIN32
+                system("pause");
+#endif
             break;
 
         case 3:
             cout << "Lista: " << endl;
             show();
             cout << endl;
-            system("pause");
+#ifdef WIN32
+                system("pause");
+#endif
             break;
 
         case 4:
             buscar();
             cout << endl;
-            system("pause");
+#ifdef WIN32
+                system("pause");
+#endif
             break;
         case 5:
             cout << "Se ha finalizado " << endl;
             cout << endl;
-            system("pause");
+#ifdef WIN32
+                system("pause");
+#endif
             break;
 
         default:
             cout << "Opcion no valida, intente nuevamente" << endl;
             cout << endl;
+#ifdef WIN32
             system("pause");
+#endif
             break;
         }
+#ifdef WIN32
         system("cls");
+#endif
     } while (opcion != 5);
 }
