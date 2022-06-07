@@ -1,4 +1,4 @@
-//ENUNCIADO: Listas enlazadas con ordenamiento al insertar (se permite el uso de std string)
+//ENUNCIADO: Listas simplemente enlazadas con ordenamiento al insertar (se permite el uso de std string)
 //PARTICIPANTES: 1101331 Asier Ochoa, 1099399 Yeuris Terrero, 1101629 Carlos Garcia, 1100685 Miguel Angel
 //FECHA: 04/06/2022
 
@@ -25,7 +25,7 @@ template <typename T>
 class LinkedList {
     private:
         struct Node{
-            explicit Node(T& val): value(val), next(nullptr){}
+            Node(T& val): value(val), next(nullptr){}
             T value;
             Node* next;
         };
