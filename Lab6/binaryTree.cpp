@@ -14,6 +14,7 @@ class BinarySearchTree {
         Node* root;
         void recursiveInsert(Node* currentRoot, T& value);
         void recursiveRemove(Node* currentRoot, Node* parent, T& value);
+        T findSuccesor(Node* currentRoot, Node* parent, T& value); // Succesor's value gets returned as copy and is deleted
         bool isEmpty();
 
     public:
@@ -77,14 +78,26 @@ void BinarySearchTree<T>::recursiveRemove(BinarySearchTree::Node* currentRoot, B
             tmpVal < parent->value ? parent->left = tmp : parent->right = tmp;
             return;
         }
+        currentRoot->value = findSuccesor(currentRoot->right, currentRoot, value);
+        return;
     }
-    if (value < currentRoot->value){
+    if (value < currentRoot->value){ // Recursive search
         if (currentRoot->left != nullptr)
             recursiveRemove(currentRoot->left, currentRoot, value);
     } else {
         if (currentRoot->right != nullptr)
             recursiveRemove(currentRoot->right, currentRoot, value);
     }
+}
+
+template<typename T>
+T BinarySearchTree<T>::findSuccesor(BinarySearchTree::Node* currentRoot, BinarySearchTree::Node* parent, T &value) {
+    if (currentRoot->left != nullptr) {
+        return findSuccesor(currentRoot->left, currentRoot, value);
+    }
+    T ret = currentRoot->value;
+    recursiveRemove(currentRoot, parent, currentRoot->value);
+    return ret;
 }
 
 int main() {
@@ -95,9 +108,8 @@ int main() {
     t.Insert(56);
     t.Insert(45);
     t.Insert(18);
-    t.Insert(16);
     t.Insert(15);
     t.Insert(14);
-    t.Remove(18);
+    t.Remove(21);
     return 0;
 }
