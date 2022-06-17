@@ -21,7 +21,7 @@ persistente es mayor que 3?*/
 
 int getMultDigits(int num)
 {
-	int digit = 0, digit2 = 0, result = 10, prst = 0;
+	int digit = 0, result = 10, prst = 0;
 
 	while (result > 9)
 	{

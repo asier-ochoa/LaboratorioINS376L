@@ -24,7 +24,6 @@ int getSquareSum(int hour, int minute)
     int y = minute * minute;
 
     return x + y;
-
 }
 
 int main()
@@ -37,7 +36,7 @@ int main()
             std::string minute = std::to_string(j);
             std::string time = hour + minute;
             int timeInt = std::stoi(time);
-            
+             
             int time2 = getSquareSum(i, j);
 
             if (time2 == timeInt)
