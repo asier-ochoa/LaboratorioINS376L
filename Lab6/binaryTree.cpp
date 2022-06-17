@@ -1,5 +1,5 @@
 //ENUNCIADO: Arbol binario ordenado con borrado, insercion y busqueda
-//PARTICIPANTES: 1101331 Asier Ochoa ; Yeuris Terrero | 1099399 ; Carlos Garcia | 1101629 ; Miguel Angel | 1100685
+//PARTICIPANTES: 1101331 Asier Ochoa; Yeuris Terrero | 1099399; Carlos Garcia | 1101629; Miguel Angel | 1100685
 //FECHA: 10/06/22
 
 template <typename T>
@@ -12,13 +12,14 @@ class BinarySearchTree {
             Node* right;
         };
         Node* root;
-        void recursiveInsert(Node* currentRoot, T &value);
+        void recursiveInsert(Node* currentRoot, T& value);
+        void recursiveRemove(Node* currentRoot, Node* parent, T& value);
         bool isEmpty();
 
     public:
         BinarySearchTree() : root(nullptr) {}
         void Insert(T value);
-        void Remove(T& value);
+        void Remove(T value);
 };
 
 template<typename T>
@@ -52,6 +53,40 @@ void BinarySearchTree<T>::recursiveInsert(BinarySearchTree::Node* currentRoot, T
     }
 }
 
+template<typename T>
+void BinarySearchTree<T>::Remove(T value) {
+    if (isEmpty())
+        return;
+    recursiveRemove(root, nullptr, value);
+}
+
+template<typename T>
+void BinarySearchTree<T>::recursiveRemove(BinarySearchTree::Node* currentRoot, BinarySearchTree::Node* parent, T &value) {
+    if (currentRoot->value == value){ // Everything to the left is guaranteed to be smaller and everything to the right is guarantied to be larger than the parent!!!
+        if (currentRoot->left == nullptr && currentRoot->right == nullptr){ // Case if leaf
+            T tmpVal = currentRoot->value;
+            delete currentRoot;
+            tmpVal < parent->value ? parent->left = nullptr : parent->right = nullptr;
+            return;
+        }
+        if ((currentRoot->left != nullptr) != (currentRoot->right != nullptr)){ // XOR
+            Node* tmp;
+            T tmpVal = currentRoot->value;
+            currentRoot->left != nullptr ? tmp = currentRoot->left : tmp = currentRoot->right;
+            delete currentRoot;
+            tmpVal < parent->value ? parent->left = tmp : parent->right = tmp;
+            return;
+        }
+    }
+    if (value < currentRoot->value){
+        if (currentRoot->left != nullptr)
+            recursiveRemove(currentRoot->left, currentRoot, value);
+    } else {
+        if (currentRoot->right != nullptr)
+            recursiveRemove(currentRoot->right, currentRoot, value);
+    }
+}
+
 int main() {
     BinarySearchTree<int> t;
     t.Insert(43);
@@ -59,5 +94,10 @@ int main() {
     t.Insert(42);
     t.Insert(56);
     t.Insert(45);
+    t.Insert(18);
+    t.Insert(16);
+    t.Insert(15);
+    t.Insert(14);
+    t.Remove(18);
     return 0;
 }
