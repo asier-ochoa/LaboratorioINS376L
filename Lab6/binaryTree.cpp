@@ -2,6 +2,12 @@
 //PARTICIPANTES: 1101331 Asier Ochoa; Yeuris Terrero | 1099399; Carlos Garcia | 1101629; Miguel Angel | 1100685
 //FECHA: 10/06/22
 
+#define FONT_SIZE 25
+#define PADDING 8
+#define LINE_THICK 3
+#define SPACING_VER 10
+#define SPACING_HOR 20
+
 template <typename T>
 class BinarySearchTree {
     private:
@@ -21,6 +27,9 @@ class BinarySearchTree {
         BinarySearchTree() : root(nullptr) {}
         void Insert(T value);
         void Remove(T value);
+
+        template <typename U>
+        friend class BinaryTreeRenderer; // Allows for rendering to be completely decoupled
 };
 
 template<typename T>
@@ -100,16 +109,41 @@ T BinarySearchTree<T>::findSuccesor(BinarySearchTree::Node* currentRoot, BinaryS
     return ret;
 }
 
+template <typename T>
+class BinaryTreeRenderer {
+    private:
+        BinarySearchTree<T>& tree;
+
+        int cursorY, childrenLeft, childrenRight; // Reset every frame
+        void RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot);
+
+    public:
+        BinaryTreeRenderer(BinarySearchTree<T>& tree) :tree(tree), cursorY(0), childrenLeft(0), childrenRight(0) {}
+        void Draw();
+};
+
+template<typename T>
+void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot) {
+    if (currentRoot->left != nullptr){
+        cursorY, childrenLeft += 1;
+        RecursiveDraw(currentRoot->left);
+    }
+    if (currentRoot->right != nullptr){
+        cursorY, childrenRight += 1;
+        RecursiveDraw(currentRoot->right);
+    }
+
+    cursorY--;
+}
+
+template<typename T>
+void BinaryTreeRenderer<T>::Draw() {
+    RecursiveDraw(tree.root);
+    cursorY, childrenLeft, childrenRight = 0;
+}
+
 int main() {
     BinarySearchTree<int> t;
-    t.Insert(43);
-    t.Insert(21);
-    t.Insert(42);
-    t.Insert(56);
-    t.Insert(45);
-    t.Insert(18);
-    t.Insert(15);
-    t.Insert(14);
-    t.Remove(21);
+    BinaryTreeRenderer<int> renderer(t);
     return 0;
 }
