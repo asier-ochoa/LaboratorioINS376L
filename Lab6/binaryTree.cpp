@@ -3,7 +3,7 @@
 //FECHA: 10/06/22
 
 template <typename T>
-class BinaryTree {
+class BinarySearchTree {
     private:
         struct Node{
             Node(T value): value(value), left(nullptr), right(nullptr) {}
@@ -12,29 +12,52 @@ class BinaryTree {
             Node* right;
         };
         Node* root;
-        Node* traverse(Node* currentRoot, T &value) {
-            if (currentRoot->left != nullptr && currentRoot->right != nullptr) {
-                currentRoot->left > currentRoot->right ? traverse(currentRoot->left, value) : traverse(currentRoot->right, value);
-            }
-        }
+        void recursiveInsert(Node* currentRoot, T &value);
         bool isEmpty();
 
     public:
-        BinaryTree() :root(nullptr) {}
+        BinarySearchTree() : root(nullptr) {}
         void Insert(T value);
         void Remove(T& value);
 };
 
 template<typename T>
-bool BinaryTree<T>::isEmpty() {
+bool BinarySearchTree<T>::isEmpty() {
     return root == nullptr;
 }
 
 template<typename T>
-void BinaryTree<T>::Insert(T value) {
+void BinarySearchTree<T>::Insert(T value) {
     if (isEmpty()) {
         root = new Node(value);
         return;
     }
+    recursiveInsert(root, value);
+}
 
+template<typename T>
+void BinarySearchTree<T>::recursiveInsert(BinarySearchTree::Node* currentRoot, T &value) {
+    if (value < currentRoot->value){
+        if (currentRoot->left == nullptr) {
+            currentRoot->left = new Node(value);
+            return;
+        }
+        recursiveInsert(currentRoot->left, value);
+    } else {
+        if (currentRoot->right == nullptr) {
+            currentRoot->right = new Node(value);
+            return;
+        }
+        recursiveInsert(currentRoot->right, value);
+    }
+}
+
+int main() {
+    BinarySearchTree<int> t;
+    t.Insert(43);
+    t.Insert(21);
+    t.Insert(42);
+    t.Insert(56);
+    t.Insert(45);
+    return 0;
 }
