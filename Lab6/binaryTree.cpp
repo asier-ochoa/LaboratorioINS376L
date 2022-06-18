@@ -12,7 +12,7 @@
 #define FONT_SIZE 25
 #define PADDING 8
 #define LINE_THICK 3
-#define SPACING_VER 10
+#define SPACING_VER 30
 #define SPACING_HOR 20
 
 template <typename T>
@@ -122,39 +122,59 @@ class BinaryTreeRenderer {
         BinarySearchTree<T>& tree;
 
         int cursorY, orderX;
+        std::stringstream buff;
         void RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent);
 
     public:
-        BinaryTreeRenderer(BinarySearchTree<T>& tree) :tree(tree), cursorY(0), orderX(0) {}
+        BinaryTreeRenderer(BinarySearchTree<T>& tree) :tree(tree), cursorY(0), orderX(0), buff("") {}
         void Draw();
 };
 
 template<typename T>
 void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent) {
+    static int posX;
+    static int posY;
     if (currentRoot->left != nullptr){
         cursorY++;
         RecursiveDraw(currentRoot->left, currentRoot);
     }
     if (currentRoot->left == nullptr && currentRoot->right == nullptr){
-        DrawRectangleLinesEx(Rectangle{(FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX, (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+        buff << currentRoot->value;
+        posX = (FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX;
+        posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
+        DrawRectangleLinesEx(Rectangle{(float)posX, (float)posY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+        DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
+        buff.str("");
         //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
         orderX++;
         cursorY--;
         return;
     }
     if (currentRoot->right != nullptr) {
-        DrawRectangleLinesEx(Rectangle{(FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX, (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+        buff << currentRoot->value;
+        posX = (FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX;
+        posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
+        DrawRectangleLinesEx(Rectangle{(float )posX, (float)posY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+        DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
         //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
+        buff.str("");
         orderX++;
         cursorY++;
         RecursiveDraw(currentRoot->right, currentRoot);
-    } else {
-        DrawRectangleLinesEx(Rectangle{(FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX, (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+    }
+    if (currentRoot->right == nullptr){
+        buff << currentRoot->value;
+        posX = (FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX;
+        posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
+        DrawRectangleLinesEx(Rectangle{(float)posX, (float)posY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+        DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
+        buff.str("");
         //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
         orderX++;
         cursorY--;
         return;
     }
+    cursorY--;
 }
 
 template<typename T>
@@ -177,6 +197,7 @@ int main() {
     cam.zoom = 1;
     cam.offset = {0, 0};
     cam.rotation = 0;
+
     BinarySearchTree<int> t;
     BinaryTreeRenderer<int> renderer(t);
 
