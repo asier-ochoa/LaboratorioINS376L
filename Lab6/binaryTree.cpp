@@ -10,11 +10,11 @@
 #include <iostream>
 #include <sstream>
 
-#define FONT_SIZE 25
-#define PADDING 8
+#define FONT_SIZE 32
+#define PADDING 10
 #define LINE_THICK 3
 #define SPACING_VER 30
-#define SPACING_HOR 20
+#define SPACING_HOR 15
 
 template <typename T>
 class BinarySearchTree {
@@ -84,7 +84,10 @@ void BinarySearchTree<T>::recursiveRemove(BinarySearchTree::Node* currentRoot, B
         if (currentRoot->left == nullptr && currentRoot->right == nullptr){ // Case if leaf
             T tmpVal = currentRoot->value;
             delete currentRoot;
-            tmpVal < parent->value ? parent->left = nullptr : parent->right = nullptr;
+            if (parent != nullptr)
+                tmpVal < parent->value ? parent->left = nullptr : parent->right = nullptr;
+            else
+                root = nullptr;
             return;
         }
         if ((currentRoot->left != nullptr) != (currentRoot->right != nullptr)){ // XOR
@@ -92,7 +95,10 @@ void BinarySearchTree<T>::recursiveRemove(BinarySearchTree::Node* currentRoot, B
             T tmpVal = currentRoot->value;
             currentRoot->left != nullptr ? tmp = currentRoot->left : tmp = currentRoot->right;
             delete currentRoot;
-            tmpVal < parent->value ? parent->left = tmp : parent->right = tmp;
+            if (parent != nullptr)
+                tmpVal < parent->value ? parent->left = tmp : parent->right = tmp;
+            else
+                root = tmp;
             return;
         }
         currentRoot->value = findSuccesor(currentRoot->right, currentRoot, value);
