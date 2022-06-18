@@ -1,11 +1,12 @@
-//ENUNCIADO: Arbol binario ordenado con borrado, insercion y busqueda
+//ENUNCIADO: Arbol binario ordenado con borrado e insercion
 //PARTICIPANTES: 1101331 Asier Ochoa; Yeuris Terrero | 1099399; Carlos Garcia | 1101629; Miguel Angel | 1100685
 //FECHA: 10/06/22
 
-#include "raylib.h"
+#include "raylib.h" // The data structure has no stdlib dependencies, these are only used for drawing
 #include "rlImGui.h"
 #include "imgui.h"
 #include "raymath.h"
+#include <unordered_map>
 #include <iostream>
 #include <sstream>
 
@@ -116,36 +117,40 @@ T BinarySearchTree<T>::findSuccesor(BinarySearchTree::Node* currentRoot, BinaryS
     return ret;
 }
 
+// -------------Rendering stuff below-------------
+
 template <typename T>
 class BinaryTreeRenderer {
     private:
         BinarySearchTree<T>& tree;
+        std::unordered_map<typename BinarySearchTree<T>::Node*, Vector2> positions;
 
-        int cursorY, orderX;
+        int cursorY = 0, orderX = 0;
         std::stringstream buff;
-        void RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent);
+        void RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot);
+        void RecursiveLine(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent);
 
     public:
-        BinaryTreeRenderer(BinarySearchTree<T>& tree) :tree(tree), cursorY(0), orderX(0), buff("") {}
+        BinaryTreeRenderer(BinarySearchTree<T>& tree) :tree(tree), buff("") {}
         void Draw();
 };
 
 template<typename T>
-void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent) {
+void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot) {
     static int posX;
     static int posY;
     if (currentRoot->left != nullptr){
         cursorY++;
-        RecursiveDraw(currentRoot->left, currentRoot);
+        RecursiveDraw(currentRoot->left);
     }
     if (currentRoot->left == nullptr && currentRoot->right == nullptr){
         buff << currentRoot->value;
         posX = (FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX;
         posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
+        positions[currentRoot] = Vector2{(float)posX, (float)posY};
         DrawRectangleLinesEx(Rectangle{(float)posX, (float)posY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
         DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
         buff.str("");
-        //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
         orderX++;
         cursorY--;
         return;
@@ -154,22 +159,22 @@ void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* cu
         buff << currentRoot->value;
         posX = (FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX;
         posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
+        positions[currentRoot] = Vector2{(float)posX, (float)posY};
         DrawRectangleLinesEx(Rectangle{(float )posX, (float)posY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
         DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
-        //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
         buff.str("");
         orderX++;
         cursorY++;
-        RecursiveDraw(currentRoot->right, currentRoot);
+        RecursiveDraw(currentRoot->right);
     }
     if (currentRoot->right == nullptr){
         buff << currentRoot->value;
         posX = (FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX;
         posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
+        positions[currentRoot] = Vector2{(float)posX, (float)posY};
         DrawRectangleLinesEx(Rectangle{(float)posX, (float)posY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
         DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
         buff.str("");
-        //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
         orderX++;
         cursorY--;
         return;
@@ -178,11 +183,29 @@ void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* cu
 }
 
 template<typename T>
+void BinaryTreeRenderer<T>::RecursiveLine(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent) {
+    if (currentRoot->left != nullptr){
+        Vector2 origin = positions.at(currentRoot);
+        Vector2 end = positions.at(currentRoot->left);
+        DrawLineEx(origin, end, LINE_THICK, WHITE);
+        RecursiveLine(currentRoot->left, currentRoot);
+    }
+    if (currentRoot->right != nullptr){
+        Vector2 origin = positions.at(currentRoot);
+        Vector2 end = positions.at(currentRoot->right);
+        DrawLineEx(origin, end, LINE_THICK, WHITE);
+        RecursiveLine(currentRoot->right, currentRoot);
+    }
+}
+
+template<typename T>
 void BinaryTreeRenderer<T>::Draw() {
     if (!tree.isEmpty()){
-        RecursiveDraw(tree.root, nullptr);
+        positions.clear();
+        RecursiveDraw(tree.root);
         cursorY = 0;
         orderX = 0;
+        RecursiveLine(tree.root, nullptr);
     }
 }
 
