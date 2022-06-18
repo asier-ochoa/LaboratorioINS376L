@@ -1,6 +1,6 @@
 //ENUNCIADO: Arbol binario ordenado con borrado e insercion
 //PARTICIPANTES: 1101331 Asier Ochoa; Yeuris Terrero | 1099399; Carlos Garcia | 1101629; Miguel Angel | 1100685
-//FECHA: 10/06/22
+//FECHA: 18/06/22
 
 #include "raylib.h" // The data structure has no stdlib dependencies, these are only used for drawing
 #include "rlImGui.h"
