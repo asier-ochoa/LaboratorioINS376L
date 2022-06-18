@@ -2,6 +2,13 @@
 //PARTICIPANTES: 1101331 Asier Ochoa; Yeuris Terrero | 1099399; Carlos Garcia | 1101629; Miguel Angel | 1100685
 //FECHA: 10/06/22
 
+#include "raylib.h"
+#include "rlImGui.h"
+#include "imgui.h"
+#include "raymath.h"
+#include <iostream>
+#include <sstream>
+
 #define FONT_SIZE 25
 #define PADDING 8
 #define LINE_THICK 3
@@ -114,36 +121,94 @@ class BinaryTreeRenderer {
     private:
         BinarySearchTree<T>& tree;
 
-        int cursorY, childrenLeft, childrenRight; // Reset every frame
-        void RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot);
+        int cursorY, orderX;
+        void RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent);
 
     public:
-        BinaryTreeRenderer(BinarySearchTree<T>& tree) :tree(tree), cursorY(0), childrenLeft(0), childrenRight(0) {}
+        BinaryTreeRenderer(BinarySearchTree<T>& tree) :tree(tree), cursorY(0), orderX(0) {}
         void Draw();
 };
 
 template<typename T>
-void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot) {
+void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent) {
     if (currentRoot->left != nullptr){
-        cursorY, childrenLeft += 1;
-        RecursiveDraw(currentRoot->left);
+        cursorY++;
+        RecursiveDraw(currentRoot->left, currentRoot);
     }
-    if (currentRoot->right != nullptr){
-        cursorY, childrenRight += 1;
-        RecursiveDraw(currentRoot->right);
+    if (currentRoot->left == nullptr && currentRoot->right == nullptr){
+        DrawRectangleLinesEx(Rectangle{(FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX, (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+        //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
+        orderX++;
+        cursorY--;
+        return;
     }
-
-    cursorY--;
+    if (currentRoot->right != nullptr) {
+        DrawRectangleLinesEx(Rectangle{(FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX, (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+        //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
+        orderX++;
+        cursorY++;
+        RecursiveDraw(currentRoot->right, currentRoot);
+    } else {
+        DrawRectangleLinesEx(Rectangle{(FONT_SIZE + PADDING * 2 + SPACING_HOR) * orderX, (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY, FONT_SIZE + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
+        //std::cout << "Drawn: " << currentRoot->value << " | O: " << orderX << " | C: " << cursorY << '\n';
+        orderX++;
+        cursorY--;
+        return;
+    }
 }
 
 template<typename T>
 void BinaryTreeRenderer<T>::Draw() {
-    RecursiveDraw(tree.root);
-    cursorY, childrenLeft, childrenRight = 0;
+    if (!tree.isEmpty()){
+        RecursiveDraw(tree.root, nullptr);
+        cursorY = 0;
+        orderX = 0;
+    }
 }
 
 int main() {
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    InitWindow(1280, 720, "Binary Search Tree");
+    rlImGuiSetup(true);
+    SetTargetFPS(60);
+
+    Camera2D cam;
+    cam.target = {0, 0};
+    cam.zoom = 1;
+    cam.offset = {0, 0};
+    cam.rotation = 0;
     BinarySearchTree<int> t;
     BinaryTreeRenderer<int> renderer(t);
+
+    while (!WindowShouldClose()){
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+            cam.offset = Vector2Add(cam.offset, GetMouseDelta());
+        cam.zoom += GetMouseWheelMove() * 0.1;
+        BeginDrawing();
+        ClearBackground(BLACK);
+        BeginMode2D(cam);
+        renderer.Draw();
+        EndMode2D();
+        rlImGuiBegin();
+        if (ImGui::Begin("Control")) {
+            static int value;
+
+            ImGui::PushTextWrapPos(ImGui::GetWindowWidth());
+            ImGui::Text("LOLXD", nullptr);
+            ImGui::PopTextWrapPos();
+            ImGui::Separator();
+            ImGui::PushItemWidth(80);
+            ImGui::InputInt("##", &value); ImGui::SameLine();
+            ImGui::PopItemWidth();
+            if (ImGui::Button("Insert Value"))
+                t.Insert(value);
+            if (ImGui::Button("Remove Value")){
+                t.Remove(value);
+            }
+        }
+        ImGui::End();
+        rlImGuiEnd();
+        EndDrawing();
+    }
     return 0;
 }
