@@ -13,7 +13,7 @@
 #define FONT_SIZE 32
 #define PADDING 10
 #define LINE_THICK 3
-#define SPACING_VER 30
+#define SPACING_VER 40
 #define SPACING_HOR 15
 
 template <typename T>
@@ -155,7 +155,7 @@ void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* cu
         posX = (PADDING * 2 + SPACING_HOR) * orderX + totalWidth;
         posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
         totalWidth += textWidth;
-        positions[currentRoot] = Vector2{(float)posX, (float)posY};
+        positions[currentRoot] = Vector2{(float)posX + (float)(textWidth + PADDING * 2) / 2, (float)posY};
         DrawRectangleLinesEx(Rectangle{(float)posX, (float)posY, (float)textWidth + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
         DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
         buff.str("");
@@ -169,7 +169,7 @@ void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* cu
         posX = (PADDING * 2 + SPACING_HOR) * orderX + totalWidth;
         posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
         totalWidth += textWidth;
-        positions[currentRoot] = Vector2{(float)posX, (float)posY};
+        positions[currentRoot] = Vector2{(float)posX + (float)(textWidth + PADDING * 2) / 2, (float)posY};
         DrawRectangleLinesEx(Rectangle{(float )posX, (float)posY, (float)textWidth + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
         DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
         buff.str("");
@@ -183,7 +183,7 @@ void BinaryTreeRenderer<T>::RecursiveDraw(typename BinarySearchTree<T>::Node* cu
         posX = (PADDING * 2 + SPACING_HOR) * orderX + totalWidth;
         posY = (FONT_SIZE + PADDING * 2 + SPACING_VER) * cursorY;
         totalWidth += textWidth;
-        positions[currentRoot] = Vector2{(float)posX, (float)posY};
+        positions[currentRoot] = Vector2{(float)posX + (float)(textWidth + PADDING * 2) / 2, (float)posY};
         DrawRectangleLinesEx(Rectangle{(float)posX, (float)posY, (float)textWidth + PADDING * 2, FONT_SIZE + PADDING * 2}, LINE_THICK, WHITE);
         DrawText(buff.str().c_str(), posX + PADDING, posY + PADDING, FONT_SIZE, WHITE);
         buff.str("");
@@ -198,12 +198,14 @@ template<typename T>
 void BinaryTreeRenderer<T>::RecursiveLine(typename BinarySearchTree<T>::Node* currentRoot, typename BinarySearchTree<T>::Node* parent) {
     if (currentRoot->left != nullptr){
         Vector2 origin = positions.at(currentRoot);
+        origin.y += FONT_SIZE + PADDING * 2;
         Vector2 end = positions.at(currentRoot->left);
         DrawLineEx(origin, end, LINE_THICK, WHITE);
         RecursiveLine(currentRoot->left, currentRoot);
     }
     if (currentRoot->right != nullptr){
         Vector2 origin = positions.at(currentRoot);
+        origin.y += FONT_SIZE + PADDING * 2;
         Vector2 end = positions.at(currentRoot->right);
         DrawLineEx(origin, end, LINE_THICK, WHITE);
         RecursiveLine(currentRoot->right, currentRoot);
@@ -251,7 +253,7 @@ int main() {
             static int value;
 
             ImGui::PushTextWrapPos(ImGui::GetWindowWidth());
-            ImGui::Text("LOLXD", nullptr);
+            ImGui::Text("Binary Search Tree implementation. To the left lie all strictly smaller nodes, to the right all equal or larger nodes. Node drawing is done left to right doing in order traversal. This avoids inner node overlap by giving each node its own X position. The node drawing algorithim is very space and processing efficient, using no extra storage. This is in stark constrast to the line drawing algorithim which uses pointer values as keys to a position vector inside a hash map.", nullptr);
             ImGui::PopTextWrapPos();
             ImGui::Separator();
             ImGui::PushItemWidth(80);
