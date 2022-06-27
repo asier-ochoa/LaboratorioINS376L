@@ -6,9 +6,6 @@
 #include <iostream>
 using namespace std;
 
-//Prototipo
-void torres_hanoi(int, int, int, int);
-
 int main()
 {
 
