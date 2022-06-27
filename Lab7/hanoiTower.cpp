@@ -6,10 +6,11 @@
 
 int moveDiscs(int discs, char a, char b, char c )
 {
-    int mov = 0;
+    static int mov = 0;
     if (discs == 1)
     {
         std::cout << "Se ha movido el disco " << discs << " de la barra " << a << " hasta la " << c << "\n";
+        mov++;
     }
     else
     {
