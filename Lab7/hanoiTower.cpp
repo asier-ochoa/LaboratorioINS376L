@@ -9,15 +9,15 @@ int moveDiscs(int discs, char a, char b, char c )
     static int mov = 0;
     if (discs == 1)
     {
-        std::cout << "Se ha movido el disco " << discs << " de la barra " << a << " hasta la " << c << "\n";
+        std::cout << "Se ha movido el disco " << discs << " de la barra " << a << " hasta la " << c << "\n"; //si solo tiene un disco, se mueve a la torre C
         mov++;
     }
     else
     {
-        moveDiscs(discs - 1, a, c, b );
+        moveDiscs(discs - 1, a, c, b ); //llamada recursiva hasta que se pasa el disco 1 como argumentom en dado caso es movido
         std::cout << "Se ha movido el disco " << discs << " de la barra " << a << " hasta la " << c << "\n";
         mov++;
-        moveDiscs(discs - 1, b, a, c);
+        moveDiscs(discs - 1, b, a, c); //llamada recursiva que mueve
     }
 
     return mov;
