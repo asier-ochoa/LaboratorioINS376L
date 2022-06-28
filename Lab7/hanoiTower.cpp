@@ -25,10 +25,10 @@ int moveDiscs(int discs, char a, char b, char c )
 
 int main()
 {
-    int discs, mov;
+    int discs;
     std::cout << "Ingresa el numero de discos: ";
     std::cin >> discs;
-    mov = moveDiscs(discs,'A','B','C');
+    int mov = moveDiscs(discs,'A','B','C');
     std::cout << "\nNumero de movimientos total = " << mov;
     return 0;
 }
