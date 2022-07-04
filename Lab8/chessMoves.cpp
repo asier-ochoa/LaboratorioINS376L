@@ -4,6 +4,10 @@
 
 #include <vector>
 #include <iostream>
+#include "raylib.h"
+#include "raymath.h"
+
+bool reDraw = true;
 
 //Coordinates origin is at top left. +Y is down and +X is right.
 class Piece {
@@ -22,7 +26,6 @@ class Queen : public Piece {
         bool canMoveTo(int x, int y) override;
         void draw() override {}
 };
-
 
 class Tower : public Piece {
     public:
@@ -72,7 +75,35 @@ bool Tower::canMoveTo(int x, int y) {
 }
 
 int main() {
+    InitWindow(800, 950, "Chess Move Sim");
+    SetTargetFPS(60);
+    RenderTexture framebuffer = LoadRenderTexture(800, 800);
     std::vector<Piece*> pieces;
+
+    while (!WindowShouldClose()){
+        ClearBackground(BLACK);
+        if (reDraw){
+            BeginTextureMode(framebuffer);
+            ClearBackground(WHITE);
+            // Draw board
+            for (int i = 0; i < 8; ++i) {
+                for (int j = 0; j < 8; ++j) {
+                    Rectangle a = {(float)i * 100, (float)j * 100, 100, 100};
+                    if (j % 2 == 0)
+                        DrawRectangleRec(a, (i % 2 == 0 ? Color{249, 246, 187, 255} : Color{127, 76, 31, 255}));
+                    else
+                        DrawRectangleRec(a, (i % 2 != 0 ? Color{249, 246, 187, 255} : Color{127, 76, 31, 255}));
+
+                }
+            }
+            EndTextureMode();
+        }
+        BeginDrawing();
+        DrawTexturePro(framebuffer.texture, Rectangle{0, 0, 800, -800}, Rectangle{0, 150, 800, 800},Vector2{0,0},0,WHITE);
+        EndDrawing();
+        reDraw = false;
+    }
+
     pieces.emplace_back(new Queen(3, 6, pieces));
     pieces.emplace_back(new Tower(1, 1, pieces));
     Piece& q_ref = *pieces[0];
