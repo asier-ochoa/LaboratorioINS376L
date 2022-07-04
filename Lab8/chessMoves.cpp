@@ -3,9 +3,7 @@
 //FECHA: 4/07/22
 
 #include <vector>
-#include <iostream>
 #include "raylib.h"
-#include "raymath.h"
 
 bool reDraw = true;
 Texture queenSprite;
@@ -16,11 +14,12 @@ class Piece {
     public:
         Piece(int posX, int posY, std::vector<Piece*>& activePieces): posX(posX), posY(posY), activePieces(activePieces) {}
         virtual void draw() = 0;
+        virtual void draw(int x, int y) = 0;
         virtual bool canMoveTo(int x, int y) = 0;
         int team;
+        int posX, posY;
     protected:
         std::vector<Piece*>& activePieces;
-        int posX, posY;
 };
 
 class Queen : public Piece {
@@ -28,6 +27,7 @@ class Queen : public Piece {
         Queen(int posX, int posY, std::vector<Piece*>& board): Piece(posX, posY, board) {team = 0;};
         bool canMoveTo(int x, int y) override;
         void draw() override { DrawTexture(queenSprite, posX * 100, posY * 100, WHITE);}
+        void draw(int x, int y) override {DrawTexture(queenSprite, x, y, WHITE);};
 };
 
 class Tower : public Piece {
@@ -35,6 +35,7 @@ class Tower : public Piece {
         Tower(int posX, int posY, std::vector<Piece*>& board): Piece(posX, posY, board) {team = 1;};
         bool canMoveTo(int x, int y) override;
         void draw() override { DrawTexture(towerSprite, posX * 100, posY * 100, WHITE);}
+        void draw(int x, int y) override {DrawTexture(towerSprite, x, y, WHITE);};
 };
 
 bool Queen::canMoveTo(int x, int y) {
@@ -78,7 +79,7 @@ bool Tower::canMoveTo(int x, int y) {
 }
 
 int main() {
-    InitWindow(800, 950, "Chess Move Sim");
+    InitWindow(800, 800, "Chess Move Sim");
     SetTargetFPS(60);
     queenSprite = LoadTextureFromImage(LoadImage("queen.png"));
     towerSprite = LoadTextureFromImage(LoadImage("tower.png"));
@@ -89,8 +90,24 @@ int main() {
     pieces.emplace_back(new Tower(1, 1, pieces));
     pieces.emplace_back(new Tower(3, 1, pieces));
 
+    Piece* selectedPiece = nullptr;
+
     while (!WindowShouldClose()){
         ClearBackground(BLACK);
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+            if (selectedPiece == nullptr){
+                for (int i = 0; i < pieces.size(); ++i) {
+                    if (GetMouseX() / 100 == pieces[i]->posX && GetMouseY() / 100 == pieces[i]->posY)
+                        selectedPiece = pieces[i];
+                }
+            } else {
+                selectedPiece->posX = GetMouseX() / 100;
+                selectedPiece->posY = GetMouseY() / 100;
+                selectedPiece = nullptr;
+                reDraw = true;
+            }
+        }
+
         if (reDraw){
             BeginTextureMode(framebuffer);
             ClearBackground(WHITE);
@@ -128,24 +145,15 @@ int main() {
                             DrawRectangleRec(a, Color{0, 255, 0, 127});
                     }
                 }
-                std::cout << '\n';
             }
             EndTextureMode();
         }
         BeginDrawing();
-        DrawTexturePro(framebuffer.texture, Rectangle{0, 0, 800, -800}, Rectangle{0, 150, 800, 800},Vector2{0,0},0,WHITE);
+        DrawTexturePro(framebuffer.texture, Rectangle{0, 0, 800, -800}, Rectangle{0, 0, 800, 800},Vector2{0,0},0,WHITE);
+        if (selectedPiece != nullptr)
+            selectedPiece->draw(GetMouseX(), GetMouseY());
         EndDrawing();
         reDraw = false;
-    }
-
-    Piece& t_ref = *pieces[1];
-
-    std::cout << "Tower:\n";
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            std::cout << t_ref.canMoveTo(i, j);
-        }
-        std::cout << '\n';
     }
     return 0;
 }
