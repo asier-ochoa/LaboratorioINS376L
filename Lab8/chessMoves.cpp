@@ -81,8 +81,10 @@ bool Tower::canMoveTo(int x, int y) {
 int main() {
     InitWindow(800, 800, "Chess Move Sim");
     SetTargetFPS(60);
-    queenSprite = LoadTextureFromImage(LoadImage("queen.png"));
-    towerSprite = LoadTextureFromImage(LoadImage("tower.png"));
+    Image q_i = LoadImage("queen.png");
+    Image t_i = LoadImage("tower.png");
+    queenSprite = LoadTextureFromImage(q_i);
+    towerSprite = LoadTextureFromImage(t_i);
     RenderTexture framebuffer = LoadRenderTexture(800, 800);
     std::vector<Piece*> pieces;
     pieces.emplace_back(new Queen(4, 6, pieces));
@@ -155,5 +157,7 @@ int main() {
         EndDrawing();
         reDraw = false;
     }
+    UnloadImage(q_i);
+    UnloadImage(t_i);
     return 0;
 }
